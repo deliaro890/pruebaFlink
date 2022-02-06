@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block head_content %}
+{% load static %}
+<title>Prueba | menu</title>
+{%endblock%}
+
+{%block container%}
+
+    {% if error %}
+        <p class="alert alert-danger">{{error}}</p>
+    {% endif %}
+   
+        {% csrf_token %} 
+        
+        <div class="form-group" style="margin-top: 100px;">
+            <p class='menu_title'>Menú</p>     
+        </div>
+
+        <!--no ocupa api-->
+        <div class="form-group">
+           <a href="{% url 'empresas:signup_form' %}">
+            <button class="btn btn-primary btn-block mt-5 menu" type="button">Registrar nueva empresa</button>
+           </a>
+        </div>
+
+         <!--api-->
+         <div class="form-group">
+            <a href="{% url 'empresas:empresas_list' %}">
+             <button class="btn btn-primary btn-block mt-5 menu" type="button">Listado de empresas registradas</button>
+            </a>
+         </div>
+         
+{%endblock%}

@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block head_content %}
+{% load static %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <title>Empresa | Registro</title>
+{% endblock %}
+{% block container %}
+   
+    <h4 class="mb-4 title_signup titles">Registra una nueva empresa</h4>
+
+    <form action="{% url 'empresas:signup_form' %}" method="POST" class="form-sign_up">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Nombre</label>
+            <input
+            class="form-control {% if form.nombre.errors %} is-invalid {% endif %}"
+            type="text"  
+            name="nombre"
+            value="{% if form.errors %}{{form.nombre.value}}{% else %}{{nombre}}{% endif %}" 
+            />
+            <div class="invalid-feedback">
+                {% for error in form.nombre.errors %}
+                  {{error}}
+                {% endfor %}
+            </div>
+        </div>
+    
+        <div class="form-group">
+                <label>Descripcion</label>
+                <input type="text" 
+                class="form-control {% if form.descripcion.errors %} is-invalid {% endif %}"  
+                name="descripcion"
+                value="{% if form.errors %}{{form.descripcion.value}}{% else %}{{descripcion}}{% endif %}" 
+                />
+                <div class="invalid-feedback">
+                    {% for error in form.descripcion.errors %}
+                      {{error}}
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group">
+            <label>Símbolo</label>
+            <input type="text" 
+            class="form-control {% if form.simbolo.errors %} is-invalid {% endif %}" 
+            name="simbolo"
+            value="{% if form.errors %}{{form.simbolo.value}}{% else %}{{simbolo}}{% endif %}" 
+            />
+            <div class="invalid-feedback">
+                {% for error in form.simbolo.errors %}
+                  {{error}}
+                {% endfor %}
+            </div>
+        </div>
+    
+        <button class="btn btn-primary btn-block mt-5 b_terminar_compra" type="submit">Registrar</button>
+
+    </form>
+
+{% endblock%}

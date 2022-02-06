@@ -1,0 +1,147 @@
+
+{% extends "base.html" %}
+{% block head_content %}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <title>Flink | Empresas</title>
+{% endblock%}
+
+{% block container %}
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-6 pt-3 pb-3 box_movil" id="profile-box">
+          <p>Lista de empresas</p>
+            <div class='tabla_center'>
+                <table class="table table-responsive" id="tabla">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Valores de Mercado</th>
+                        </tr>
+                        <tr>
+                          <td colspan="4">
+                            <input id="buscar" type="text" class="form-control" placeholder="Escriba algo para filtrar" />
+                          </td>
+                        </tr>
+                    </thead>
+                   
+                    <tbody>
+                        {%for i in empresas%}
+                        <tr>
+                            <td>{{i.nombre}}</td>
+                            <td>{{i.descripcion}}</td>
+                            <td onclick="valores('{{ forloop.counter }}')" data-simbolo="{{ i.simbolo }}" data-nombre="{{ i.nombre }}" data-values="{{i.valores}}" id="valor_boton_{{ forloop.counter }}">{{i.simbolo}}</td>  
+                        </tr>
+                        {% endfor %}
+                       
+            
+                    </tbody>
+                    
+                    <tfoot>
+                      <tr>
+                        <th scope="row">Total de registros</th>
+            <td>{{cantidad}}</td>
+                      
+                      </tr>
+                    </tfoot>
+                </table>
+            </div>
+                  
+        </div>
+    </div>
+</div>
+
+<div class="modalBack" id="modalBack">
+  <div class="modal-contenido">
+    <p onclick="cerrar()">X</p>
+    <h2 id="nombre_empresa" class="modal_titles"></h2>
+    <h4 id="simbolo_empresa" class="modal_titles"></h4>
+    <div id="container_api"></div>
+  </div>  
+</div>
+
+<script>
+    var busqueda = document.getElementById('buscar');
+    var table = document.getElementById("tabla").tBodies[0];
+
+    buscaTabla = function(){
+      texto = busqueda.value.toLowerCase();
+      var r=0;
+      while(row = table.rows[r++])
+      {
+        if ( row.innerText.toLowerCase().indexOf(texto) !== -1 )
+          row.style.display = null;
+        else
+          row.style.display = 'none';
+      }
+    }
+
+    busqueda.addEventListener('keyup', buscaTabla);
+    
+    var modal = document.getElementById("modalBack")
+    var nombre_empresa = document.getElementById('nombre_empresa')
+    var simbolo_empresa = document.getElementById('simbolo_empresa')
+    var nombre_empresa = document.getElementById('nombre_empresa')
+
+    function valores(counter) {
+      var valor_boton = document.getElementById('valor_boton_'+counter)
+      let valores = valor_boton.getAttribute('data-values')
+      let simbolo = valor_boton.getAttribute('data-simbolo')
+      let nombre = valor_boton.getAttribute('data-nombre')
+
+      simbolo_empresa.innerHTML = simbolo
+      nombre_empresa.innerHTML = nombre  
+        
+      modal.style.display = 'block'
+      llenar_grafica(valores)
+    }
+
+    function cerrar() {
+      modal.style.display = 'none'
+    }
+
+    function llenar_grafica(valores){
+      
+      let arreglo = valores.split('_')
+      console.log('arrego: ',arreglo)
+      let arreglo_ = arreglo.map((elemento)=>{
+        return parseInt(elemento)
+      })
+      console.log('arrego_: ',arreglo_)
+      Highcharts.chart('container_api', {
+        chart: {
+            marginTop: 5
+        },
+        title: {
+            text: 'Valores de Mercado'
+        },
+
+        xAxis: {
+            categories: ['fecha1', 'fecha2', 'fecha3', 'fecha4', 'fecha5', 'fecha6', 'fecha7', 'fecha8', 'fecha9', 'fecha10', 'fecha11', 'fecha12']
+        },
+
+        yAxis: {
+            title: {
+                text: 'USD'
+            }
+        },
+
+        series: [{
+            data: arreglo_
+        }]
+      });
+
+    }
+    
+</script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/sankey.js"></script>
+<script src="https://code.highcharts.com/modules/organization.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+{% endblock %}
+
+
+ 
